@@ -3,6 +3,8 @@ package com.example.RestfulAPI.controller;
 
 import com.example.RestfulAPI.entity.Employee;
 import com.example.RestfulAPI.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping ("/employees")
 public class EmployeeController {
+
+    Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
     @Autowired
     private EmployeeService employeeService;
 
@@ -25,6 +30,7 @@ public class EmployeeController {
 
         return employeeService.getAllEmployee();
     }
+
     @GetMapping("/by-salary")
     public List<Employee> getBySalary(@RequestParam double salary){
         return employeeService.getBySalary(salary);
@@ -34,10 +40,9 @@ public class EmployeeController {
         return employeeService.getByFirstName(firstName);
     }
     @GetMapping("/by-firstNameContaining")
-    public List<Employee> getByFirstNameContaining(@RequestParam String firstNamePart){
-        System.out.println("firstNamePart : "+ firstNamePart);
-
-        return employeeService.getByFirstNameContaining(firstNamePart);
+    public List<Employee> getByFirstNameContaining(@RequestParam("nameLike") String nameLike){
+        logger.info("nameLike param + " + nameLike);
+        return employeeService.getByFirstNameContaining(nameLike);
     }
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable  Integer id) {
